@@ -11,9 +11,31 @@
         android:id="@+id/medtxtView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Medium Activity!"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:text="Chosen Level: Medium!"
+        app:layout_constraintBottom_toTopOf="@id/medScoretxtView"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+    <TextView
+        android:id="@+id/medScoretxtView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Your Score: "
+        app:layout_constraintBottom_toTopOf="@id/medLayout"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/medtxtView" />
+
+    <GridLayout
+        android:id="@+id/medLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:orientation="horizontal"
+        tools:context=".medActivity" >
+    </GridLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

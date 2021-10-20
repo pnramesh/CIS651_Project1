@@ -6,13 +6,36 @@
     android:layout_height="match_parent"
     tools:context=".hardActivity"
     android:id="@+id/hard_activity" >
+
     <TextView
         android:id="@+id/hardtxtView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hard Activity!"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:text="Chosen Level: Hard!"
+        app:layout_constraintBottom_toTopOf="@id/hardScoretxtView"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+    <TextView
+        android:id="@+id/hardScoretxtView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Your Score: "
+        app:layout_constraintBottom_toTopOf="@id/hardLayout"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/hardtxtView" />
+
+    <GridLayout
+        android:id="@+id/hardLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:orientation="horizontal"
+        tools:context=".hardActivity" >
+
+    </GridLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
