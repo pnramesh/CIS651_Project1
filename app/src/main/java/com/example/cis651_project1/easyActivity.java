@@ -1,19 +1,16 @@
 package com.example.cis651_project1;
 
-import android.content.res.Resources;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.LayerDrawable;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import android.os.Handler;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
 
@@ -23,24 +20,47 @@ import java.util.Random;
 
 public class easyActivity extends AppCompatActivity {
 
-    public int lastimageid = 100;
+    public int lastimageboxid = 100;
     public int score = 0; //tracks the score
-    public int lastimagebox_id=100; //tracks the id of the previously clicked box
+    public int lastimage_id=100; //tracks the id of the previously clicked box
+    public int totalimages = 4; //to track if any images are still open and go to results when none are open
+    public List<Integer> generated = new ArrayList<Integer>();
+
+    //Using only two images since this is a 2x2 and each image must be shown twice to complete the game
+    final int[] imagesource = {R.drawable.one, R.drawable.two,R.drawable.three,R.drawable.four};
+    //This will be the random image order assigned to imageviews. This array size equals the number of images for the complexity
+    public int[] images = new int[4];
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.easy_activity);
 
-        //final int[] images = {
-        //        R.drawable.One, R.drawable.Two, R.drawable.Three,
-        //        R.drawable.Four, R.drawable.Five, R.drawable.Six,
-        //        R.drawable.Seven, R.drawable.Nine,
-        //        R.drawable.Ten, R.drawable.Eleven, R.drawable.Twelve};
+        //Generate random array of numbers from the total number of columns
+        //This will be used to retrieve images later
+        //The order in this list corresponds to the id of the imageview controls
+        //first number in this list corresponds to image for imageview with id 0
+        //Only two images are needed for this complexity level
+        for(int i=0;i<2;i++){
+            Random rng = new Random();
+            int count=0;
+            //random number to choose a random source. This needs to be updated to match the number of images in source
+            Integer pic = rng.nextInt(4);
+            while(count < 2){
+                //4 is the maximum number of imageviews for this difficulty level
+                //Each image from imagesource will be placed in two locations in images
+                //After the end of this loop images will have four images (2 pairs) to load
+                Integer p1 = rng.nextInt(4) ;
+                //if the number was already used, don't use it
+                if(!generated.contains(p1)){
+                    generated.add(p1);
+                    images[p1] = imagesource[pic];
+                    Log.d("ImagePosition",p1.toString());
+                    count++;
+                }
+            }
+        }
 
-        final int[] images = {
-                        R.drawable.one, R.drawable.two, R.drawable.three,
-                        R.drawable.four};
         GridLayout gridLayout = findViewById(R.id.easyLayout);
         int column = getIntent().getIntExtra("column",2);
         gridLayout.setColumnCount(column);
@@ -58,83 +78,109 @@ public class easyActivity extends AppCompatActivity {
             imageView.setId(i);
             gridLayout.addView(imageView);
 
-            final int finalI = i;
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Random rng = new Random();
-                    List<Integer> generated = new ArrayList<Integer>();
-                        while(true)
+
+                    //Disable further clicks of the same image
+                    imageView.setEnabled(false);
+
+                    //Retrieve the number in the generated array in the position referred to by the id of the image view
+                    //This number will correspond to the image name in the image array. Since this number is generated
+                    //randomly every time, the images will also differ
+                    //Integer next = generated.get(imageView.getId());
+                    Integer next = imageView.getId();
+                    //Increment the score
+                    score++;
+                    TextView tx = (TextView) findViewById(R.id.easyScoretxtView);
+                    tx.setText("Your Score: " + score);
+
+                    //If there are no previously open imageboxes, proceed
+                    if (lastimage_id==100)
+                    {
+                        //retrieve the image from the random list that correspond to the imageview ID
+                        imageView.setImageResource(images[next]);
+                        lastimageboxid = next; //tracks the id of the last opened imagebox
+                        //lastimagebox_id = imageView.getId(); //get the id of the imageview
+                        lastimage_id = images[next]; //get the id of the image opened
+                        //Log.d("firs:lastimageid",String.valueOf(lastimageid));
+                        Log.d("first:Current Image",String.valueOf(next));
+                        Log.d("first:lastimagebox_id",String.valueOf(lastimage_id));
+                        //break;
+                    }
+                    //There is already an image open
+                    else{
+                        //Open the second image
+                        imageView.setImageResource(images[next]);
+
+                        if(lastimage_id == images[next])
                         {
-                            Integer next = rng.nextInt(3) ;
-                            //If there are no previously open imageboxes, proceed
-                            if (lastimagebox_id==100)
-                            {
-                                //generated.add(next);
-                                imageView.setImageResource(images[next]);
-                                lastimageid = next;
-                                lastimagebox_id = imageView.getId(); //get the id of the imageview
-                                Log.d("firs:lastimageid",String.valueOf(lastimageid));
-                                Log.d("first:Current Image",String.valueOf(next));
-                                Log.d("first:lastimagebox_id",String.valueOf(lastimagebox_id));
-                                break;
-                            }
-                            //There is already an image open
-                            else{
-                                //Open the second image
-                                imageView.setImageResource(images[next]);
+                            //Matching numbers opened
+                            Log.d("match:lastimageid",String.valueOf(lastimageboxid));
+                            Log.d("match:Current Image",String.valueOf(next));
+                            Log.d("match:lastimagebox_id",String.valueOf(lastimage_id));
+                            //Show Success Message
+                            Toast t = Toast.makeText(getApplicationContext(),"Match!!!",Toast.LENGTH_SHORT);
+                            t.show();
 
-                                if(lastimageid == next)
-                                {
-                                    //Matching numbers opened
-                                    Log.d("match:lastimageid",String.valueOf(lastimageid));
-                                    Log.d("match:Current Image",String.valueOf(next));
-                                    Log.d("match:lastimagebox_id",String.valueOf(lastimagebox_id));
+                            //Disable further clicks
+                            imageView.setEnabled(false);
+                            ImageView previmage = (ImageView) findViewById(lastimageboxid);
+                            previmage.setEnabled(false);
 
-                                    Toast t = Toast.makeText(getApplicationContext(),"Match!!!",Toast.LENGTH_LONG);
-                                    t.show();
-
-                                    //Increment the score
-                                    score++;
-                                    TextView tx = (TextView) findViewById(R.id.easyScoretxtView);
-                                    tx.setText("Your Score: " + score);
-
-                                    //Reset the image IDs since this is a match
-                                    lastimageid = 100;
-
-                                    //Replace matching images with check mark
-                                    imageView.setImageResource(R.drawable.cmark);
-                                    imageView.setEnabled(false); //Disable further clicks
-
-                                    ImageView previmage = (ImageView) findViewById(lastimagebox_id);
-                                    previmage.setImageResource(R.drawable.cmark);
-                                    previmage.setEnabled(false);
-
-                                    lastimagebox_id=100;
-
+                            //Remove from the tile by hiding after a delay of 2 seconds
+                            final Handler handler = new Handler();
+                            handler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    imageView.setVisibility(View.INVISIBLE);
+                                    previmage.setVisibility(View.INVISIBLE);
                                 }
-                                else {
-                                    //Not a match
-                                    Toast t = Toast.makeText(getApplicationContext(),"No Match!!!",Toast.LENGTH_LONG);
-                                    t.show();
-                                    Log.d("fail:lastimageid",String.valueOf(lastimageid));
-                                    Log.d("fail:Current Image",String.valueOf(next));
-                                    Log.d("fail:lastimagebox_id",String.valueOf(lastimagebox_id));
+                            },2000);
 
-                                    lastimageid = 100; //Reset the image IDs to check for next pair
 
-                                    //Replace matching images with X mark
-                                    imageView.setImageResource(R.drawable.xmark);
-                                    imageView.setEnabled(false);
+                            //Reset the image IDs since this is a match
+                            lastimageboxid = 100;
+                            lastimage_id=100;
 
-                                    ImageView previmage = (ImageView) findViewById(lastimagebox_id);
-                                    previmage.setImageResource(R.drawable.xmark);
-                                    previmage.setEnabled(false);
-                                    lastimagebox_id=100;
-                                }
-                                break;
+                            //reduce the count of images open by 2 since two images are removed
+                            totalimages-=2;
+                            //if no images are left, open the score activity
+                            if(totalimages == 0){
+                                String scorestr = Integer.toString(score);
+                                Intent result = new Intent(easyActivity.this,activity_score.class);
+                                result.putExtra("TotalScore",scorestr);
+                                startActivity(result);
                             }
+
+
                         }
+                        else {
+                            //Not a match
+                            Toast t = Toast.makeText(getApplicationContext(),"No Match!!!",Toast.LENGTH_SHORT);
+                            t.show();
+                            Log.d("fail:lastimageid",String.valueOf(lastimageboxid));
+                            Log.d("fail:Current Image",String.valueOf(next));
+                            Log.d("fail:lastimagebox_id",String.valueOf(lastimage_id));
+
+                            //Switch the tiles back to question mark after 2 seconds and enable them again
+                            //Instantiate the previous imagebox
+                            ImageView previmage = (ImageView) findViewById(lastimageboxid);
+
+                            final Handler handler = new Handler();
+                            handler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    imageView.setImageResource(R.drawable.qmark);
+                                    imageView.setEnabled(true);
+                                    previmage.setImageResource(R.drawable.qmark);
+                                    previmage.setEnabled(true);
+                                }
+                            },2000);
+                            lastimageboxid = 100; //Reset the image IDs to check for next pair
+                            lastimage_id=100;
+                        }
+                    }
                 }
                 }
             );

@@ -10,6 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CIS651_Project1">
         <activity
+            android:name=".activity_score"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
@@ -18,10 +21,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".easyActivity"></activity>
-        <activity android:name=".medActivity"></activity>
-        <activity android:name=".hardActivity"></activity>
-
+        <activity android:name=".easyActivity" />
+        <activity android:name=".medActivity" />
+        <activity android:name=".hardActivity" />
     </application>
 
 </manifest>
