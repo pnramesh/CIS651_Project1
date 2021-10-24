@@ -26,8 +26,8 @@ public class easyActivity extends AppCompatActivity {
     public int totalimages = 4; //to track if any images are still open and go to results when none are open
     public List<Integer> generated = new ArrayList<Integer>();
 
-    //Using only two images since this is a 2x2 and each image must be shown twice to complete the game
-    final int[] imagesource = {R.drawable.one, R.drawable.two,R.drawable.three,R.drawable.four};
+    //18 images loaded as Array
+    final int[] imagesource = {R.drawable.one, R.drawable.two,R.drawable.three,R.drawable.four,R.drawable.five, R.drawable.six,R.drawable.seven,R.drawable.eight,R.drawable.nine, R.drawable.ten,R.drawable.eleven,R.drawable.twelve,R.drawable.thirteen, R.drawable.fourteen,R.drawable.fifteen,R.drawable.sixteen,R.drawable.seventeen,R.drawable.eighteen};
     //This will be the random image order assigned to imageviews. This array size equals the number of images for the complexity
     public int[] images = new int[4];
     @Override
@@ -40,12 +40,12 @@ public class easyActivity extends AppCompatActivity {
         //This will be used to retrieve images later
         //The order in this list corresponds to the id of the imageview controls
         //first number in this list corresponds to image for imageview with id 0
-        //Only two images are needed for this complexity level
+        //Only four images (2 pairs) are needed for this complexity level
         for(int i=0;i<2;i++){
             Random rng = new Random();
             int count=0;
             //random number to choose a random source. This needs to be updated to match the number of images in source
-            Integer pic = rng.nextInt(4);
+            Integer pic = rng.nextInt(18);
             while(count < 2){
                 //4 is the maximum number of imageviews for this difficulty level
                 //Each image from imagesource will be placed in two locations in images
@@ -83,6 +83,7 @@ public class easyActivity extends AppCompatActivity {
                 public void onClick(View v) {
 
                     //Disable further clicks of the same image
+
                     imageView.setEnabled(false);
 
                     //Retrieve the number in the generated array in the position referred to by the id of the image view
@@ -106,7 +107,6 @@ public class easyActivity extends AppCompatActivity {
                         //Log.d("firs:lastimageid",String.valueOf(lastimageid));
                         Log.d("first:Current Image",String.valueOf(next));
                         Log.d("first:lastimagebox_id",String.valueOf(lastimage_id));
-                        //break;
                     }
                     //There is already an image open
                     else{
@@ -128,7 +128,7 @@ public class easyActivity extends AppCompatActivity {
                             ImageView previmage = (ImageView) findViewById(lastimageboxid);
                             previmage.setEnabled(false);
 
-                            //Remove from the tile by hiding after a delay of 2 seconds
+                            //Remove from the tile by hiding after a delay of 1 second
                             final Handler handler = new Handler();
                             handler.postDelayed(new Runnable() {
                                 @Override
@@ -136,7 +136,7 @@ public class easyActivity extends AppCompatActivity {
                                     imageView.setVisibility(View.INVISIBLE);
                                     previmage.setVisibility(View.INVISIBLE);
                                 }
-                            },2000);
+                            },1000);
 
 
                             //Reset the image IDs since this is a match
@@ -149,10 +149,11 @@ public class easyActivity extends AppCompatActivity {
                             if(totalimages == 0){
                                 String scorestr = Integer.toString(score);
                                 Intent result = new Intent(easyActivity.this,activity_score.class);
+                                result.putExtra("Level","Easy");
+                                result.putExtra("BestScore","4");
                                 result.putExtra("TotalScore",scorestr);
                                 startActivity(result);
                             }
-
 
                         }
                         else {
@@ -163,7 +164,7 @@ public class easyActivity extends AppCompatActivity {
                             Log.d("fail:Current Image",String.valueOf(next));
                             Log.d("fail:lastimagebox_id",String.valueOf(lastimage_id));
 
-                            //Switch the tiles back to question mark after 2 seconds and enable them again
+                            //Switch the tiles back to question mark after 1 second and enable them again
                             //Instantiate the previous imagebox
                             ImageView previmage = (ImageView) findViewById(lastimageboxid);
 
@@ -176,9 +177,10 @@ public class easyActivity extends AppCompatActivity {
                                     previmage.setImageResource(R.drawable.qmark);
                                     previmage.setEnabled(true);
                                 }
-                            },2000);
+                            },1000);
                             lastimageboxid = 100; //Reset the image IDs to check for next pair
                             lastimage_id=100;
+
                         }
                     }
                 }

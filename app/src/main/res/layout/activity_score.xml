@@ -6,14 +6,32 @@
     android:layout_height="match_parent"
     tools:context=".activity_score">
     <TextView
-        android:id="@+id/scoretxtView"
+        android:id="@+id/leveltxtView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Chosen Level: Easy!"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:text="Chosen Level: "
+        app:layout_constraintBottom_toTopOf="@id/bestscoretxtView"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+    <TextView
+        android:id="@+id/bestscoretxtView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Best Score for this Level: "
+        app:layout_constraintBottom_toTopOf="@id/scoretxtView"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/leveltxtView" />
+    <TextView
+        android:id="@+id/scoretxtView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Your Score: !"
+        app:layout_constraintBottom_toTopOf="@id/btnHome"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/bestscoretxtView" />
 
     <Button
         android:id="@+id/btnHome"
